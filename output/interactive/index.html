@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>景文資通系介紹</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Noto+Serif+TC:wght@700;900&family=LXGW+WenKai+TC:wght@400;700&family=Archivo+Black&family=Caveat:wght@700&family=Special+Elite&display=block" rel="stylesheet">
+<script src="timeline.js"></script>
+<style>
+:root{
+  --cream:#FDFBF7; --kraft:#D9BC8C; --kraft2:#C9A46E; --sky:#DCEEFB; --graph:#EEF6FC;
+  --ink:#1c1b1a; --ink2:#4a4640; --red:#E3392B; --yellow:#FFE14D; --blue:#1E6FD0; --green:#25A36A; --orange:#F28A24;
+  --zh:"Noto Sans TC","Microsoft JhengHei",sans-serif; --serif:"Noto Serif TC","PMingLiU",serif;
+  --hand:"LXGW WenKai TC","DFKai-SB",cursive; --disp:"Archivo Black","Noto Sans TC",sans-serif;
+  --type:"Special Elite","Noto Serif TC",monospace; --scrawl:"Caveat","LXGW WenKai TC",cursive;
+  --ui-bg:#141311; --ui-fg:#f3efe7; --ui-dim:#9b958a;
+}
+@media (prefers-color-scheme: light){ :root:not([data-theme="dark"]){ --ui-bg:#ece7dd; --ui-fg:#1c1b1a; --ui-dim:#6d675d; } }
+:root[data-theme="light"]{ --ui-bg:#ece7dd; --ui-fg:#1c1b1a; --ui-dim:#6d675d; }
+:root[data-theme="dark"]{ --ui-bg:#141311; --ui-fg:#f3efe7; --ui-dim:#9b958a; }
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ui-bg);color:var(--ui-fg);font-family:var(--zh);overflow:hidden;height:100%}
+body.render{background:#000}
+#wrap{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0}
+#stage{position:absolute;inset:0;overflow:hidden;background:var(--cream);color:var(--ink)}
+.scene{position:absolute;inset:0;display:none}
+.scene.on{display:block}
+.scene *{position:absolute}
+.scene .flow, .scene .flow *, .scene span, .scene small, .scene b, .scene br{position:static}
+/* 背景 */
+.bg-kraft{background:var(--kraft)}
+.bg-kraft::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(ellipse at 20% 30%,rgba(255,255,255,.18),transparent 55%),
+  radial-gradient(ellipse at 80% 80%,rgba(90,60,20,.18),transparent 60%),
+  repeating-linear-gradient(83deg,rgba(120,80,30,.05) 0 2px,transparent 2px 7px)}
+.bg-graph{background-color:var(--graph);background-image:
+  linear-gradient(rgba(30,111,208,.16) 1px,transparent 1px),linear-gradient(90deg,rgba(30,111,208,.16) 1px,transparent 1px),
+  linear-gradient(rgba(30,111,208,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(30,111,208,.07) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,24px 24px,24px 24px}
+.bg-sky{background:var(--sky)}
+.bg-sky::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 70% 20%,rgba(255,255,255,.7),transparent 60%)}
+.bg-cream{background:var(--cream)}
+.bg-ruled{background-color:var(--cream);background-image:linear-gradient(rgba(30,111,208,.13) 1.5px,transparent 1.5px);background-size:100% 48px}
+.bg-ruled::after{content:"";position:absolute;left:96px;top:0;bottom:0;width:2px;background:rgba(227,57,43,.35)}
+#grain{position:absolute;inset:-40px;pointer-events:none;z-index:50;opacity:.5;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .2  0 0 0 0 .15  0 0 0 0 .1  0 0 0 1.1 -.42'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+#vig{position:absolute;inset:0;pointer-events:none;z-index:51;background:radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(40,25,10,.28) 100%)}
+/* 紙卡 */
+.card>.pp{position:absolute;inset:0;background:#fff;filter:url(#rough) drop-shadow(0 16px 10px rgba(0,0,0,.4))}
+.card>.ct{position:absolute;inset:0}
+.shadow{filter:drop-shadow(0 16px 10px rgba(0,0,0,.4))}
+.sticker{filter:drop-shadow(5px 0 0 #fff) drop-shadow(-5px 0 0 #fff) drop-shadow(0 5px 0 #fff) drop-shadow(0 -5px 0 #fff) drop-shadow(0 16px 10px rgba(0,0,0,.4))}
+.tape{width:150px;height:42px;background:rgba(255,236,150,.78);filter:url(#rough2);box-shadow:0 2px 3px rgba(0,0,0,.12)}
+.tape.b{background:rgba(160,210,245,.78)}
+.tape.p{background:rgba(250,170,190,.75)}
+/* 標題 */
+.tag{left:60px;top:30px;height:44px;padding:0 18px;line-height:44px;background:var(--ink);color:var(--cream);font:700 24px/44px var(--zh);letter-spacing:2px;white-space:nowrap}
+.tag b{font-family:var(--disp);font-weight:400;letter-spacing:3px;margin-left:10px;color:var(--yellow)}
+.title{left:60px;top:84px;height:84px;font:900 64px/84px var(--zh);white-space:nowrap;letter-spacing:1px}
+.title small{font:400 34px var(--disp);letter-spacing:2px;color:var(--ink2);margin-left:18px}
+.tline{left:60px;top:172px;height:10px;background:var(--ink);transform-origin:0 50%;filter:url(#rough2)}
+.mk{background:linear-gradient(transparent 52%,rgba(255,225,77,.95) 52%,rgba(255,225,77,.95) 92%,transparent 92%) no-repeat;background-size:0% 100%}
+.mk.r{background-image:linear-gradient(transparent 50%,rgba(227,57,43,.35) 50%,rgba(227,57,43,.35) 92%,transparent 92%)}
+.hl{background:rgba(255,225,77,.55);mix-blend-mode:multiply;transform-origin:0 50%;filter:url(#marker)}
+.hl.g{background:rgba(60,220,140,.45)}
+.hl.p{background:rgba(255,120,170,.42)}
+.hand{font-family:var(--hand);font-weight:700}
+.stamp{color:var(--red);border:10px solid var(--red);border-radius:18px;font:900 64px/1.15 var(--zh);text-align:center;display:flex;align-items:center;justify-content:center;filter:url(#grunge);mix-blend-mode:multiply}
+.stamp.blue{color:var(--blue);border-color:var(--blue)}
+.stamp.green{color:var(--green);border-color:var(--green)}
+.center{display:flex;align-items:center;justify-content:center;text-align:center}
+.photo{overflow:hidden}
+.photo img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover}
+/* 字幕 */
+#subs{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);z-index:60;text-align:center;pointer-events:none;
+  background:rgba(22,20,18,.84);padding:10px 34px 12px;border-radius:6px;max-width:1700px;white-space:nowrap;
+  box-shadow:0 6px 0 rgba(0,0,0,.25)}
+#subs .zh{display:block;font:700 42px/1.32 var(--zh);color:#fff;letter-spacing:1px}
+#subs .en{display:block;font:400 28px/1.3 var(--zh);color:#FFE88A;font-family:"Noto Sans TC",sans-serif}
+#subs.off,#subs.hide{display:none}
+/* 轉場 */
+#wipe{position:absolute;top:-60px;height:1200px;width:2400px;z-index:40;display:none}
+#wipe div{position:absolute;top:0;height:100%;filter:url(#rough)}
+/* 互動 UI */
+#ui{position:fixed;left:0;right:0;bottom:0;padding:10px 16px 14px;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;background:var(--ui-bg);color:var(--ui-fg);font:14px/1.4 var(--zh)}
+body.render #ui{display:none}
+#ui button,#ui select{background:transparent;color:var(--ui-fg);border:1px solid var(--ui-dim);border-radius:6px;padding:6px 12px;font:inherit;cursor:pointer}
+#ui button.on{background:var(--ui-fg);color:var(--ui-bg)}
+#seek{flex:1 1 300px;accent-color:#E3392B}
+#time{font-variant-numeric:tabular-nums;color:var(--ui-dim);min-width:92px}
+#chap{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+#chap button{padding:3px 9px;font-size:12px}
+#bigplay{position:fixed;z-index:70;width:96px;height:96px;border-radius:50%;border:0;background:rgba(227,57,43,.92);color:#fff;font-size:36px;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+body.render #bigplay{display:none}
+#preload{position:absolute;left:-9999px;top:0;width:10px;overflow:hidden;opacity:0}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute">
+ <defs>
+  <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="3" seed="4"/><feDisplacementMap in="SourceGraphic" scale="13" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="rough2" x="-5%" y="-20%" width="110%" height="140%"><feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="7" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="marker" x="-3%" y="-15%" width="106%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.02 0.3" numOctaves="2" seed="2"/><feDisplacementMap in="SourceGraphic" scale="16" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <filter id="grunge" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="2" seed="5" result="t"/><feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.7 1.75" result="m"/><feComposite in="SourceGraphic" in2="m" operator="in" result="c"/><feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="1" result="d"/><feDisplacementMap in="c" in2="d" scale="5" xChannelSelector="R" yChannelSelector="G"/></filter>
+  <pattern id="washi" width="28" height="28" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="28" height="28" fill="#F6C343"/><rect width="13" height="28" fill="#E3392B" opacity=".85"/></pattern>
+  <symbol id="brief" viewBox="0 0 100 90"><rect x="6" y="24" width="88" height="60" rx="8" fill="#1E6FD0" stroke="#1c1b1a" stroke-width="5"/><path d="M34 24 V12 h32 v12" fill="none" stroke="#1c1b1a" stroke-width="6"/><rect x="6" y="46" width="88" height="8" fill="#1c1b1a"/><rect x="42" y="42" width="16" height="16" rx="2" fill="#FFE14D" stroke="#1c1b1a" stroke-width="4"/></symbol>
+  <symbol id="person" viewBox="0 0 80 110"><circle cx="40" cy="24" r="18" fill="currentColor" stroke="#1c1b1a" stroke-width="5"/><path d="M8 106 C8 62 72 62 72 106 Z" fill="currentColor" stroke="#1c1b1a" stroke-width="5"/></symbol>
+  <symbol id="crown" viewBox="0 0 60 40"><path d="M4 36 L8 8 L20 22 L30 4 L40 22 L52 8 L56 36 Z" fill="#FFC21A" stroke="#1c1b1a" stroke-width="4" stroke-linejoin="round"/></symbol>
+ </defs>
+</svg>
+
+<div id="wrap"><div id="stage">
+
+<!-- ============ 01 HOOK ============ -->
+<section class="scene bg-kraft" data-id="hook">
+  <div class="tag box" data-in="S+0.15" data-k="left" data-b="0">01 · 痛點<b>THE PROBLEM</b></div>
+  <h1 class="title box" id="h-title" data-in="c0-0.1" data-k="drop" data-sfx="paper">讀大學，只是為了一張<span class="mk" id="h-mk">文憑</span>？</h1>
+  <div class="tline" style="width:880px" data-in="c0+0.1" data-k="wipe" data-d="0.4" data-b="0" data-sfx="marker"></div>
+
+  <div id="dip" data-in="S+0.35" data-k="drop" data-sfx="slap" style="left:560px;top:225px;width:800px;height:500px" data-b="0">
+    <div class="half L box" data-group="dip" style="left:0;top:0;width:400px;height:500px">
+      <div class="dipbody" style="left:0;top:0"></div>
+    </div>
+    <div class="half R box" data-group="dip" style="left:370px;top:0;width:430px;height:500px">
+      <div class="dipbody" style="left:-370px;top:0"></div>
+    </div>
+  </div>
+
+  <div class="card box" id="note1" data-in="c1+0.5" data-k="drop" data-r="-4" data-sfx="slap" style="left:800px;top:250px;width:320px;height:190px">
+    <div class="pp" style="background:#FFE45C"></div>
+    <div class="ct center" style="flex-direction:column"><div class="flow" style="font:900 76px/1 var(--zh)">低薪？</div><div class="flow" style="font:400 26px var(--type);margin-top:12px;letter-spacing:2px">LOW PAY</div></div>
+  </div>
+  <div class="card box" id="note2" data-in="c1+1.7" data-k="drop" data-r="3" data-sfx="slap" style="left:800px;top:470px;width:320px;height:190px">
+    <div class="pp" style="background:#FF9DB8"></div>
+    <div class="ct center" style="flex-direction:column"><div class="flow" style="font:900 72px/1 var(--zh)">月光族？</div><div class="flow" style="font:400 24px var(--type);margin-top:12px;letter-spacing:1px">BROKE BY MONTH-END</div></div>
+  </div>
+  <div class="card box" id="h-look" data-in="c2+0.2" data-k="up" data-r="-1.5" data-sfx="whoosh" style="left:560px;top:778px;width:800px;height:104px">
+    <div class="pp" style="background:var(--ink)"></div>
+    <div class="ct center" style="color:var(--yellow);font:900 54px var(--zh)">先看看這個數字 <svg style="position:static;margin-left:18px" width="90" height="40" viewBox="0 0 90 40"><path d="M2 20 H76 M58 4 L84 20 L58 36" fill="none" stroke="#FFE14D" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+  </div>
+</section>
+
+<!-- ============ 02 DATA ============ -->
+<section class="scene bg-graph" data-id="data">
+  <div class="tag box" data-in="S+0.2" data-k="left" data-b="0">02 · 數據<b>THE DATA</b></div>
+  <h1 class="title box" data-in="S+0.35" data-k="drop" data-sfx="paper">科技業，正在<span class="mk" id="d-mk">搶人才</span></h1>
+  <div class="tline" style="width:620px" data-in="S+0.5" data-k="wipe" data-d="0.4" data-b="0"></div>
+  <div class="card box" data-in="c3+0.3" data-k="left" data-r="-1" data-sfx="paper" style="left:120px;top:208px;width:960px;height:66px">
+    <div class="pp"></div>
+    <div class="ct center hand" style="font-size:34px;color:var(--ink2)">資料來源｜104人力銀行《2025科技業人才報告書》</div>
+  </div>
+  <div class="tape" data-r="-24" data-b="0" style="left:90px;top:196px" data-in="c3+0.45" data-k="fade" data-d="0.1"></div>
+
+  <div class="hl box deco" style="left:112px;top:470px;width:700px;height:130px" data-in="c3+8.0" data-k="wipe" data-d="0.45" data-b="0" data-sfx="marker"></div>
+  <div class="box" id="bignum" data-in="c3+6.9" data-k="stamp" data-sfx="boom" style="left:120px;top:300px;width:690px;height:330px;font:400 290px/330px var(--disp);letter-spacing:-6px;text-align:center">0.36</div>
+
+  <div class="box" data-in="c3+4.4" data-k="pop" data-sfx="pop" style="left:880px;top:310px;height:64px;padding:0 26px;background:var(--blue);color:#fff;border-radius:40px;font:700 38px/64px var(--zh)">軟體／工程類職務</div>
+  <div class="box" data-in="c3+5.6" data-k="left" data-sfx="paper" style="left:880px;top:394px;width:920px;height:70px;font:700 54px/70px var(--zh)">每 1 個職缺，平均只有</div>
+  <div class="box" data-in="c3+7.5" data-k="drop" data-sfx="slap" style="left:880px;top:470px;width:920px;height:130px;font:900 112px/130px var(--zh)">位求職者</div>
+  <div class="box" data-in="c3+8.2" data-k="fade" style="left:884px;top:604px;width:920px;height:40px;font:400 28px/40px var(--type);color:var(--ink2)">applicants per software / engineering opening</div>
+
+  <div class="box" id="d-row" style="left:120px;top:672px;width:1680px;height:210px">
+    <svg class="ic" data-in="c4+0.25" data-k="pop" data-sfx="pop" style="left:0;top:40px" width="150" height="135"><use href="#brief"/></svg>
+    <svg class="ic" data-in="c4+0.55" data-k="pop" data-sfx="pop" style="left:165px;top:40px" width="150" height="135"><use href="#brief"/></svg>
+    <svg class="ic" data-in="c4+0.85" data-k="pop" data-sfx="pop" style="left:330px;top:40px" width="150" height="135"><use href="#brief"/></svg>
+    <div data-in="c4+1.2" data-k="pop" style="left:500px;top:58px;width:110px;height:100px;font:900 76px/100px var(--zh);text-align:center;color:var(--red)">搶</div>
+    <svg data-in="c4+1.5" data-k="drop" data-sfx="pop" style="left:620px;top:30px;color:#FFB23E" width="120" height="160" viewBox="0 0 80 110"><use href="#person"/></svg>
+    <div class="card" data-in="c4+2.0" data-k="stamp" data-r="-2" data-sfx="stamp" style="left:800px;top:28px;width:880px;height:150px">
+      <div class="pp" style="background:var(--red)"></div>
+      <div class="ct center" style="color:#fff;font:900 76px var(--zh)">三個職缺，搶一個人才！</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 ANSWER ============ -->
+<section class="scene bg-sky" data-id="answer">
+  <div class="tag box" data-in="S+0.2" data-k="left" data-b="0">03 · 解答<b>THE ANSWER</b></div>
+  <h1 class="title box" data-in="c5-0.05" data-k="drop" data-sfx="paper">人才從哪裡來？</h1>
+  <div class="tline" style="width:470px" data-in="c5+0.15" data-k="wipe" data-d="0.4" data-b="0"></div>
+  <div class="box sticker" data-in="c5+1.1" data-k="drop" data-r="-2" data-sfx="slap" style="left:80px;top:232px;width:1000px;height:396px"><img src="assets/p08_212.png" style="width:100%;height:100%"></div>
+  <div class="tape b" data-r="-32" data-b="0" style="left:60px;top:226px" data-in="c5+1.3" data-k="fade" data-d="0.1" data-sfx="tape"></div>
+  <div class="tape b" data-r="-30" data-b="0" style="left:960px;top:590px" data-in="c5+1.4" data-k="fade" data-d="0.1"></div>
+  <div class="card box" data-in="c5+3.4" data-k="right" data-r="1.5" data-sfx="whoosh" style="left:1120px;top:208px;width:720px;height:486px">
+    <div class="pp"></div>
+    <div class="ct">
+      <div style="left:44px;top:34px;font:900 66px/80px var(--zh)">景文科技大學</div>
+      <div style="left:40px;top:116px;font:900 92px/110px var(--zh);color:var(--blue)">資訊與通訊系</div>
+      <div style="left:44px;top:238px;width:632px;height:6px;background:var(--ink)"></div>
+      <div class="fit" style="left:44px;top:258px;width:640px;font:700 26px/38px var(--zh);white-space:nowrap">JinWen University of Science and Technology</div>
+      <div class="fit" style="left:44px;top:302px;width:640px;font:400 26px/36px var(--zh);color:var(--ink2);white-space:nowrap">Department of Information and<br>Communication Engineering</div>
+      <div style="left:44px;top:398px;height:56px;padding:0 22px 0 16px;background:var(--red);color:#fff;border-radius:30px;font:700 30px/56px var(--zh);white-space:nowrap;display:flex;align-items:center"><svg style="position:static;margin-right:10px" width="26" height="34" viewBox="0 0 26 34"><path d="M13 33 C4 20 1 15 1 12 A12 12 0 0 1 25 12 C25 15 22 20 13 33Z" fill="#fff"/><circle cx="13" cy="12" r="5" fill="#E3392B"/></svg>新北市新店區安忠路99號</div>
+    </div>
+  </div>
+  <div class="card box" data-in="c6+0.1" data-k="up" data-r="-1.2" data-sfx="slap" style="left:240px;top:722px;width:1440px;height:146px">
+    <div class="pp"></div>
+    <div class="ct center" style="font:900 68px var(--zh)">一條<span class="mk r flow" id="a-mk" style="color:var(--red);margin:0 6px">翻轉人生</span>、通往高薪產業的捷徑！</div>
+  </div>
+</section>
+
+<!-- ============ 04 HEROES ============ -->
+<section class="scene bg-ruled" data-id="heroes">
+  <div class="tag box" data-in="S+0.2" data-k="left" data-b="0">04 · 跨界<b>CROSSOVER</b></div>
+  <h1 class="title box" data-in="S+0.4" data-k="drop" data-sfx="paper">非工科，也能當<span class="mk" id="r-mk">資通人</span></h1>
+  <div class="tline" style="width:760px" data-in="S+0.6" data-k="wipe" data-d="0.4" data-b="0"></div>
+
+  <div class="flip box" id="fa" data-in="c7+2.6" data-k="left" data-r="-2" data-sfx="whoosh" style="left:140px;top:212px;width:380px;height:440px">
+    <div class="face front card" style="inset:0"><div class="pp" style="background:#FFF6E6"></div><div class="ct">
+      <svg style="left:95px;top:26px" width="190" height="170" viewBox="0 0 190 170"><path d="M40 120 C10 110 8 64 40 58 C38 22 80 10 96 34 C112 8 158 20 152 58 C184 64 180 112 150 120 Z" fill="#fff" stroke="#1c1b1a" stroke-width="7" stroke-linejoin="round"/><rect x="42" y="118" width="106" height="40" rx="6" fill="#fff" stroke="#1c1b1a" stroke-width="7"/><path d="M70 120 V156 M96 120 V156 M122 120 V156" stroke="#1c1b1a" stroke-width="5"/></svg>
+      <div style="left:0;top:214px;width:380px;text-align:center;font:900 64px/1 var(--zh)">鄭同學</div>
+      <div style="left:0;top:300px;width:380px;text-align:center;font:700 38px/1 var(--zh);color:var(--ink2)">高中｜餐飲科</div>
+      <div style="left:0;top:362px;width:380px;text-align:center;font:400 26px/1 var(--type);letter-spacing:2px;color:var(--red)">CULINARY ARTS</div>
+    </div></div>
+    <div class="face back card" style="inset:0"><div class="pp" style="background:#fff"></div><div class="ct cert"></div></div>
+  </div>
+  <div class="flip box" id="fb" data-in="c8+0.1" data-k="left" data-r="2" data-sfx="whoosh" style="left:580px;top:212px;width:380px;height:440px">
+    <div class="face front card" style="inset:0"><div class="pp" style="background:#EAF3FF"></div><div class="ct">
+      <svg style="left:85px;top:30px" width="210" height="165" viewBox="0 0 210 165"><path d="M10 22 L100 34 L100 158 L10 146 Z" fill="#E3392B" stroke="#1c1b1a" stroke-width="7" stroke-linejoin="round"/><path d="M200 22 L110 34 L110 158 L200 146 Z" fill="#fff" stroke="#1c1b1a" stroke-width="7" stroke-linejoin="round"/><circle cx="55" cy="88" r="22" fill="#fff"/><text x="155" y="80" font-family="Noto Sans TC" font-weight="900" font-size="34" text-anchor="middle">日本</text><text x="155" y="122" font-family="Noto Sans TC" font-weight="900" font-size="34" text-anchor="middle">語</text></svg>
+      <div style="left:0;top:214px;width:380px;text-align:center;font:900 64px/1 var(--zh)">林同學</div>
+      <div style="left:0;top:300px;width:380px;text-align:center;font:700 38px/1 var(--zh);color:var(--ink2)">高中｜日文科</div>
+      <div style="left:0;top:362px;width:380px;text-align:center;font:400 26px/1 var(--type);letter-spacing:2px;color:var(--red)">JAPANESE</div>
+    </div></div>
+    <div class="face back card" style="inset:0"><div class="pp" style="background:#fff"></div><div class="ct cert"></div></div>
+  </div>
+  <div id="cutline" style="left:110px;top:430px;width:880px;height:0;border-top:5px dashed var(--red);transform-origin:0 0;z-index:3"></div>
+  <svg id="scissor" style="left:0;top:370px;z-index:5" width="220" height="120" viewBox="0 0 220 120">
+    <g id="bladeA"><path d="M100 60 L214 48 L210 58 Z" fill="#cfd6dc" stroke="#1c1b1a" stroke-width="4" stroke-linejoin="round"/><path d="M100 60 L56 34" stroke="#E3392B" stroke-width="12" stroke-linecap="round"/><circle cx="40" cy="26" r="22" fill="none" stroke="#E3392B" stroke-width="10"/></g>
+    <g id="bladeB"><path d="M100 60 L214 72 L210 62 Z" fill="#e6ebef" stroke="#1c1b1a" stroke-width="4" stroke-linejoin="round"/><path d="M100 60 L56 86" stroke="#E3392B" stroke-width="12" stroke-linecap="round"/><circle cx="40" cy="94" r="22" fill="none" stroke="#E3392B" stroke-width="10"/></g>
+    <circle cx="100" cy="60" r="6" fill="#1c1b1a"/>
+  </svg>
+
+  <div class="card box offer" data-in="c10+0.35" data-k="right" data-r="1" data-sfx="whoosh" style="left:1040px;top:212px;width:760px;height:128px" data-co="碩倍德科技" data-pay="年薪約 85 萬"></div>
+  <div class="card box offer" data-in="c10+1.5" data-k="right" data-r="-1" data-sfx="whoosh" style="left:1040px;top:362px;width:760px;height:128px" data-co="銳鋒科技" data-pay="年薪約 80 萬"></div>
+  <div class="card box offer" data-in="c10+5.3" data-k="right" data-r="1.5" data-sfx="whoosh" style="left:1040px;top:512px;width:760px;height:140px" data-co="廣達電腦" data-pay="年薪約 120 萬" data-who="資處科學長"></div>
+
+  <div class="box" id="typer" data-in="c11-0.05" data-k="fade" data-d="0.05" data-b="0.8" style="left:140px;top:690px;width:1660px;height:132px;font:900 86px/132px var(--serif);color:var(--red);white-space:nowrap" data-text="非工科照樣贏！年薪 80萬～120萬"></div>
+  <div class="box" data-in="c11+2.6" data-k="fade" style="left:146px;top:836px;width:1640px;height:40px;font:400 26px/40px var(--zh);color:var(--ink2)">＊依本系校友就業實例（新臺幣）；實際薪資依個人職務而異</div>
+</section>
+
+<!-- ============ 05 LAB ============ -->
+<section class="scene bg-graph" data-id="lab">
+  <svg style="left:0;top:0;opacity:.18" width="1920" height="1080"><g fill="none" stroke="#1E6FD0" stroke-width="3"><path d="M0 980 H300 L360 920 H700 M1920 260 H1700 L1640 200 H1400 M1920 1000 H1500 L1450 950 H1200"/><circle cx="700" cy="920" r="9"/><circle cx="1400" cy="200" r="9"/><circle cx="1200" cy="950" r="9"/></g></svg>
+  <div class="tag box" data-in="S+0.2" data-k="left" data-b="0">05 · 設備<b>THE LAB</b></div>
+  <h1 class="title box" data-in="S+0.4" data-k="drop" data-sfx="paper">伍仟萬實驗室<small>THE NT$50M LAB</small></h1>
+  <div class="tline" style="width:780px" data-in="S+0.6" data-k="wipe" data-d="0.4" data-b="0"></div>
+
+  <div class="A box sticker photo" data-in="c12+0.3" data-k="pop" data-sfx="shutter" data-out="c14-0.35" data-ok="left" style="left:110px;top:206px;width:480px;height:480px"><div class="photo" style="inset:0;border-radius:50%"><img src="assets/p15_420.jpg" style="object-position:50% 60%"></div></div>
+  <div class="A box hand center" data-in="c12+3.4" data-k="drop" data-sfx="paper" data-out="c14-0.35" data-ok="left" style="left:110px;top:702px;width:480px;height:60px;font-size:42px">5G MIMO OTA 實驗室</div>
+  <div class="A box sticker photo" data-in="c12+0.9" data-k="pop" data-sfx="shutter" data-out="c14-0.3" data-ok="left" style="left:650px;top:206px;width:420px;height:360px"><div class="photo" style="inset:0;clip-path:polygon(25% 0,75% 0,100% 50%,75% 100%,25% 100%,0 50%)"><img src="assets/p16_431.jpg"></div></div>
+  <div class="A box hand center" data-in="c12+1.8" data-k="drop" data-sfx="paper" data-out="c14-0.3" data-ok="left" style="left:650px;top:582px;width:420px;height:54px;font-size:40px">射頻量測中心</div>
+  <div class="A box sticker photo" data-in="c13+2.9" data-k="pop" data-sfx="shutter" data-out="c14-0.25" data-ok="left" style="left:1130px;top:206px;width:420px;height:360px"><div class="photo" style="inset:0;clip-path:polygon(8% 4%,92% 0,100% 70%,70% 100%,0 88%)"><img src="assets/p16_432.jpg"></div></div>
+  <div class="A box hand center" data-in="c13+3.2" data-k="drop" data-out="c14-0.25" data-ok="left" style="left:1130px;top:582px;width:420px;height:54px;font-size:40px">六軸機械手臂</div>
+  <div class="A box sticker photo" data-in="c13+0.3" data-k="pop" data-r="-2" data-sfx="shutter" data-out="c14-0.3" data-ok="left" style="left:660px;top:656px;width:520px;height:224px"><img src="assets/p17_452.jpg" style="object-position:40% 45%"></div>
+  <div class="A hl box deco" data-in="c13+0.9" data-k="wipe" data-d="0.4" data-b="0" data-sfx="marker" data-out="c14-0.3" data-ok="fade" style="left:650px;top:430px;width:430px;height:90px"></div>
+  <div class="A hl g box deco" data-in="c13+2.0" data-k="wipe" data-d="0.4" data-b="0" data-sfx="marker" data-out="c14-0.3" data-ok="fade" style="left:670px;top:780px;width:500px;height:80px"></div>
+  <div class="A hl p box deco" data-in="c13+3.6" data-k="wipe" data-d="0.4" data-b="0" data-sfx="marker" data-out="c14-0.25" data-ok="fade" style="left:1140px;top:470px;width:400px;height:80px"></div>
+  <div class="A box" data-in="c13+4.3" data-k="drop" data-sfx="scribble" data-out="c14-0.2" data-ok="left" style="left:1250px;top:664px;width:590px;height:210px">
+    <svg style="left:0;top:0" width="120" height="120" viewBox="0 0 120 120"><path d="M110 112 C70 100 40 70 26 22 M12 44 L24 14 L52 30" fill="none" stroke="#E3392B" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div class="hand" style="left:120px;top:26px;width:470px;font-size:64px;line-height:1.2;color:var(--red);transform:rotate(-4deg)">科大中的<br>台大級設備！</div>
+  </div>
+
+  <div class="B box shadow photo" data-in="c14+0.3" data-k="drop" data-r="-3" data-sfx="slap" style="left:110px;top:216px;width:720px;height:440px"><img src="assets/p22_528.jpg" style="object-position:50% 0"></div>
+  <div class="B tape" data-r="-4" data-b="0" style="left:400px;top:196px" data-in="c14+0.5" data-k="fade" data-d="0.1" data-sfx="tape"></div>
+  <div class="B box" id="grid16" data-in="c14+3.8" data-k="fade" data-d="0.05" data-b="0" style="left:900px;top:216px;width:900px;height:260px"></div>
+  <div class="B box" data-in="c14+5.5" data-k="stamp" data-sfx="boom" style="left:900px;top:486px;width:900px;height:210px;text-align:center;font:400 180px/210px var(--disp);white-space:nowrap">16<span style="font:900 80px var(--zh);margin:0 26px;vertical-align:28px">取</span><span style="color:var(--red)">12</span></div>
+  <div class="B box center" data-in="c14+0.9" data-k="fade" style="left:900px;top:712px;width:900px;height:120px;flex-direction:column"><div class="flow" style="font:700 34px/1.3 var(--zh)">107年 經濟部 iPAS 天線設計工程師初級鑑定</div><div class="flow" style="font:400 26px/1.4 var(--type);color:var(--ink2)">2018 · passed nationwide: 16 · from this dept: 12</div></div>
+  <div class="B box stamp" data-in="c14+7.4" data-k="stamp" data-r="-6" data-sfx="stamp" style="left:210px;top:712px;width:540px;height:166px;font-size:72px">前三名 全包！</div>
+</section>
+
+<!-- ============ 06 4+1 ============ -->
+<section class="scene bg-kraft" data-id="fourplus">
+  <div class="tag box" data-in="S+0.2" data-k="left" data-b="0">06 · 捷徑<b>FAST TRACK</b></div>
+  <h1 class="title box" data-in="c15-0.05" data-k="drop" data-sfx="paper"><span class="mk" id="f-mk">4+1</span> 碩士捷徑<small>BACHELOR + MASTER IN 5 YEARS</small></h1>
+  <div class="tline" style="width:1100px" data-in="c15+0.2" data-k="wipe" data-d="0.4" data-b="0"></div>
+  <div class="card box" data-in="c15+1.2" data-k="drop" data-r="-2" data-sfx="slap" data-out="c18-0.35" data-ok="fade" style="left:140px;top:236px;width:560px;height:250px"><div class="pp" style="background:var(--cream)"></div><div class="ct center" style="flex-direction:column"><div class="flow" style="font:400 96px/1.05 var(--disp)"><span style="color:var(--blue)">4</span><span style="font:900 50px var(--zh)"> 年 </span>+ <span style="color:var(--orange)">1</span><span style="font:900 50px var(--zh)"> 年</span></div><div class="flow" style="font:900 46px/1.4 var(--zh);margin-top:6px">＝ 學士 ＋ <span style="color:var(--red)">碩士</span></div></div></div>
+  <div class="box pill" data-in="c18+0.2" data-k="left" data-sfx="pop" style="left:140px;top:250px">累積財富</div>
+  <div class="box pill" data-in="c18+1.3" data-k="left" data-sfx="pop" style="left:140px;top:340px">取得學位</div>
+  <div class="box pill" data-in="c18+2.4" data-k="left" data-sfx="pop" style="left:140px;top:430px">職場卡位</div>
+  <div class="card box step" data-in="c16+0.2" data-k="throw" data-r="-1.5" data-sfx="slap" style="left:200px;top:664px" data-n="1" data-c="#1E6FD0" data-t="大一～大三｜3年" data-s="修畢學士學分・申請預研生"></div>
+  <div class="card box step" data-in="c16+3.7" data-k="throw" data-r="1.2" data-sfx="slap" style="left:720px;top:458px" data-n="2" data-c="#25A36A" data-t="大四｜1年" data-s="實習卡位・同步修碩一課程"></div>
+  <div class="card box step" data-in="c17+0.1" data-k="throw" data-r="-1" data-sfx="slap" style="left:1240px;top:252px" data-n="3" data-c="#F28A24" data-t="碩一｜1年" data-s="完成論文・取得碩士學位"></div>
+  <div class="box stamp" data-in="c18+4.3" data-k="stamp" data-r="-8" data-sfx="stamp" style="left:1270px;top:648px;width:520px;height:210px;font-size:66px">省時一年<br>職場卡位！</div>
+</section>
+
+<!-- ============ 07 COMMUTE ============ -->
+<section class="scene bg-sky" data-id="commute">
+  <div class="tag box" data-in="S+0.2" data-k="left" data-b="0">07 · 交通<b>COMMUTE</b></div>
+  <h1 class="title box" data-in="S+0.35" data-k="drop" data-sfx="paper">安坑輕軌，<span class="mk" id="m-mk">直達校門</span><small>ANKENG LIGHT RAIL</small></h1>
+  <div class="tline" style="width:1010px" data-in="S+0.55" data-k="wipe" data-d="0.4" data-b="0"></div>
+  <div class="card box container" id="map" data-in="S+0.5" data-k="up" data-b="0.6" data-sfx="paper" style="left:100px;top:204px;width:1720px;height:686px">
+    <div class="pp" style="background:#F4E7C8"></div>
+    <div class="ct" style="overflow:hidden">
+      <svg id="mapsvg" style="left:0;top:0" width="1720" height="686" viewBox="0 0 1720 686">
+        <g fill="none" stroke="#c9b48a" stroke-width="3" opacity=".9">
+          <path d="M-20 300 C200 260 300 340 520 300 S900 160 1100 210 1500 120 1760 160" stroke="#9cc3df" stroke-width="26" opacity=".55"/>
+          <path d="M0 640 C300 600 500 650 800 600 S1300 520 1720 560"/>
+          <path d="M260 0 C300 200 240 400 300 686"/><path d="M1150 0 C1100 250 1220 450 1160 686"/>
+          <path d="M600 686 C640 560 760 520 900 470"/>
+        </g>
+        <text x="1540" y="120" font-family="LXGW WenKai TC" font-weight="700" font-size="28" fill="#5d86a6">新店溪</text>
+        <path id="lrt" d="M180 560 L330 505 L480 470 L630 445 L790 415 L950 380 L1130 320 L1310 255 L1500 190" fill="none" stroke="#1c1b1a" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="2 16" opacity=".45"/>
+        <path id="tapepath" d="M1500 190 L1310 255 L1130 320 L950 380 L790 415 L630 445 L480 470 L330 505 L180 560" fill="none" stroke="url(#washi)" stroke-width="30" stroke-linejoin="round" opacity=".92" filter="url(#rough2)"/>
+        <g id="stations" font-family="Noto Sans TC" font-weight="700" font-size="24" text-anchor="middle" fill="#1c1b1a"></g>
+        <g id="train"><rect x="-46" y="-20" width="92" height="40" rx="14" fill="#fff" stroke="#1c1b1a" stroke-width="5"/><rect x="-32" y="-10" width="22" height="14" rx="3" fill="#7fc4ef"/><rect x="-4" y="-10" width="22" height="14" rx="3" fill="#7fc4ef"/><rect x="24" y="-10" width="12" height="14" rx="3" fill="#7fc4ef"/><rect x="-46" y="10" width="92" height="7" fill="#E3392B"/></g>
+      </svg>
+      <svg id="leader" style="left:0;top:0" width="1720" height="686"><path d="M730 262 L790 398" stroke="#E3392B" stroke-width="5" stroke-dasharray="10 8" fill="none"/></svg>
+    </div>
+  </div>
+  <div class="card box" id="callout" data-in="c19+4.0" data-k="pop" data-r="-1.5" data-sfx="ding" style="left:560px;top:236px;width:520px;height:230px">
+    <div class="pp"></div>
+    <div class="ct">
+      <div class="sticker" style="left:22px;top:30px;width:200px;height:120px"><img src="assets/p08_212.png" style="width:200px;height:79px;margin-top:20px;position:absolute"></div>
+      <div style="left:236px;top:26px;font:900 46px/1.1 var(--zh);color:var(--red)">景文科大站</div>
+      <div style="left:238px;top:86px;font:400 28px/1.1 var(--disp)">K5 · JinWen</div>
+      <div style="left:238px;top:126px;font:400 22px/1.1 var(--zh);color:var(--ink2)">University Station</div>
+      <div style="left:22px;top:170px;width:476px;height:44px;background:var(--ink);color:var(--yellow);font:700 28px/44px var(--zh);text-align:center">出站就是校門口</div>
+    </div>
+  </div>
+  <div class="box stamp" data-in="c19+1.9" data-k="stamp" data-r="5" data-sfx="stamp" style="left:1290px;top:600px;width:480px;height:200px;font-size:46px;flex-direction:column;white-space:nowrap"><div class="flow">2023.02.10 通車</div><div class="flow" style="font-size:28px;margin-top:8px">全長約 7.5 km・9 站</div></div>
+</section>
+
+<!-- ============ 08 TUITION ============ -->
+<section class="scene bg-cream" data-id="tuition">
+  <div class="tag box" data-in="S+0.2" data-k="left" data-b="0">08 · 學費<b>TUITION</b></div>
+  <h1 class="title box" data-in="S+0.35" data-k="drop" data-sfx="paper">學費，比你想的<span class="mk" id="t-mk">更省</span></h1>
+  <div class="tline" style="width:640px" data-in="S+0.55" data-k="wipe" data-d="0.4" data-b="0"></div>
+  <div class="box lbl" data-in="c20+0.4" data-k="left" style="left:120px;top:400px;width:330px;height:110px;color:var(--blue)">景文科大<br><small>工學院・每學期</small></div>
+  <div class="box" id="barB" data-in="c20+0.6" data-k="left" data-sfx="tear" style="left:470px;top:400px;width:1300px;height:110px">
+    <div class="shadow" style="left:0;top:0;width:1158px;height:110px"><div style="inset:0;background:var(--blue);filter:url(#rough2)"></div><div style="left:34px;top:0;height:110px;font:900 58px/110px var(--zh);color:#fff;white-space:nowrap">49,628 元</div></div>
+    <div id="piece" class="shadow" style="left:1158px;top:0;width:142px;height:110px"><div style="inset:0;background:#7fb2ec;filter:url(#rough2)"></div><div style="left:0;top:0;width:142px;height:110px;font:700 28px/110px var(--zh);color:#fff;text-align:center">6,056</div></div>
+    <div id="cutB" style="left:1156px;top:-14px;height:138px;border-left:5px dashed var(--red)"></div>
+  </div>
+  <div class="box lbl" data-in="c20+3.2" data-k="left" style="left:120px;top:236px;width:330px;height:110px">私立科大<br><small>最高收費・每學期</small></div>
+  <div class="box shadow" data-in="c20+3.4" data-k="left" data-sfx="tear" style="left:470px;top:236px;width:1300px;height:110px"><div style="inset:0;background:#8f8a82;filter:url(#rough2)"></div><div style="left:34px;top:0;height:110px;font:900 58px/110px var(--zh);color:#fff">55,684 元</div></div>
+  <svg id="bigsc" style="left:1560px;top:120px;z-index:6" width="140" height="240" viewBox="0 0 140 240">
+    <g id="bsA"><path d="M70 120 L58 4 L66 2 Z" fill="#cfd6dc" stroke="#1c1b1a" stroke-width="4"/><path d="M70 120 L40 170" stroke="#1c1b1a" stroke-width="14" stroke-linecap="round"/><circle cx="30" cy="196" r="28" fill="none" stroke="#1c1b1a" stroke-width="12"/></g>
+    <g id="bsB"><path d="M70 120 L82 4 L74 2 Z" fill="#eef2f5" stroke="#1c1b1a" stroke-width="4"/><path d="M70 120 L100 170" stroke="#1c1b1a" stroke-width="14" stroke-linecap="round"/><circle cx="110" cy="196" r="28" fill="none" stroke="#1c1b1a" stroke-width="12"/></g>
+    <circle cx="70" cy="120" r="7" fill="#E3392B"/>
+  </svg>
+  <div class="box" data-in="c20+5.9" data-k="stamp" data-r="-4" data-sfx="pop" data-out="c21-0.1" data-ok="fade" style="left:1490px;top:530px;width:300px;height:96px;font:900 70px/96px var(--zh);color:var(--red);text-align:center">−6,056</div>
+  <div class="card box" data-in="c21+0.15" data-k="up" data-r="-1" data-sfx="paper" style="left:120px;top:598px;width:860px;height:254px">
+    <div class="pp" style="background:#fffef6"></div>
+    <div class="ct" id="receipt" style="font:400 40px/1.45 var(--type);padding:26px 40px"></div>
+  </div>
+  <div class="box" data-in="c21+2.7" data-k="stamp" data-sfx="boom" style="left:1040px;top:566px;width:760px;height:288px">
+    <svg style="left:0;top:0" width="760" height="288" viewBox="0 0 760 288"><path id="burst" fill="#FFE14D" stroke="#1c1b1a" stroke-width="6" stroke-linejoin="round"/></svg>
+    <div class="center" style="left:0;top:0;width:760px;height:288px;flex-direction:column"><div class="flow" style="font:900 44px/1.2 var(--zh)">四年最多少繳</div><div class="flow" style="font:400 80px/1.1 var(--disp);color:var(--red)">48,448<span style="font:900 46px var(--zh)"> 元！</span></div></div>
+  </div>
+  <div class="box" data-in="c21+4.3" data-k="fade" style="left:120px;top:868px;width:1700px;height:34px;font:400 22px/34px var(--zh);color:var(--ink2);white-space:nowrap">＊114學年度學雜費。符合教育部私校學費減免資格者，補助後實繳約 3.21 萬／學期，低於國立科大工科平均約 3.7 萬。</div>
+</section>
+
+<!-- ============ 09 MONTAGE ============ -->
+<section class="scene bg-sky" data-id="montage">
+  <div class="tag box" data-in="S+0.15" data-k="left" data-b="0">09 · 實作<b>HANDS-ON</b></div>
+  <h1 class="title box" data-in="c22+3.3" data-k="drop" data-sfx="paper">做中學，<span class="mk" id="g-mk">學中做</span></h1>
+  <div class="tline" style="width:520px" data-in="c22+3.5" data-k="wipe" data-d="0.4" data-b="0"></div>
+  <div class="box sticker photo" data-in="S+0.25" data-k="drop" data-r="-2" data-sfx="shutter" style="left:110px;top:214px;width:400px;height:330px"><img src="assets/p18_464.jpg"></div>
+  <div class="box sticker photo" data-in="S+0.6" data-k="drop" data-r="1.5" data-sfx="shutter" style="left:530px;top:214px;width:400px;height:330px"><img src="assets/p18_463.jpg"></div>
+  <div class="box sticker photo" data-in="S+0.95" data-k="drop" data-r="-1.5" data-sfx="shutter" style="left:950px;top:214px;width:400px;height:330px"><img src="assets/p18_467.jpg" style="object-position:50% 40%"></div>
+  <div class="box sticker photo" data-in="S+1.3" data-k="drop" data-r="2" data-sfx="shutter" style="left:1370px;top:214px;width:400px;height:330px"><img src="assets/p18_466.jpg"></div>
+  <div class="box hand center" data-in="S+0.45" data-k="fade" style="left:110px;top:560px;width:400px;height:52px;font-size:36px">六軸機械手臂</div>
+  <div class="box hand center" data-in="S+0.8" data-k="fade" style="left:530px;top:560px;width:400px;height:52px;font-size:36px">大型無人機程式操控</div>
+  <div class="box hand center" data-in="S+1.15" data-k="fade" style="left:950px;top:560px;width:400px;height:52px;font-size:36px">Jetbot AI 智能小車</div>
+  <div class="box hand center" data-in="S+1.5" data-k="fade" style="left:1370px;top:560px;width:400px;height:52px;font-size:36px">HTC Vive 虛擬實境</div>
+  <div class="box stamp" data-in="c22+0.15" data-k="stamp" data-r="-6" data-sfx="stamp" style="left:200px;top:654px;width:400px;height:200px;font-size:96px">AI通</div>
+  <div class="box stamp blue" data-in="c22+0.95" data-k="stamp" data-r="4" data-sfx="stamp" style="left:760px;top:654px;width:400px;height:200px;font-size:96px">5G通</div>
+  <div class="box stamp green" data-in="c22+1.85" data-k="stamp" data-r="-3" data-sfx="stamp" style="left:1320px;top:654px;width:400px;height:200px;font-size:84px">物聯網通</div>
+</section>
+
+<!-- ============ 10 OUTRO ============ -->
+<section class="scene bg-cream" data-id="outro">
+  <div class="O1 box" data-in="S+0.3" data-k="pop" data-sfx="boom" data-out="e23+0.5" data-ok="up" style="left:360px;top:56px;width:1200px;height:655px"><img src="assets/logo_art.webp" style="width:100%;height:100%;mix-blend-mode:multiply"></div>
+  <div class="O1 card box" data-in="c23+3.0" data-k="up" data-r="-1" data-sfx="slap" data-out="e23+0.55" data-ok="up" style="left:310px;top:730px;width:1300px;height:136px">
+    <div class="pp" style="background:var(--ink)"></div>
+    <div class="ct center" style="color:#fff;font:900 76px var(--zh)">你的翻轉，<span style="color:var(--yellow);margin-left:8px">從這裡開始。</span></div>
+  </div>
+  <div class="O2 box center" data-in="e23+0.9" data-k="drop" data-sfx="slap" style="left:160px;top:96px;width:1600px;height:112px;font:900 84px/112px var(--zh)">景文科技大學　資訊與通訊系</div>
+  <div class="O2 box center" data-in="e23+1.1" data-k="fade" style="left:160px;top:212px;width:1600px;height:46px;font:400 27px/46px var(--zh);color:var(--ink2);white-space:nowrap">JinWen University of Science and Technology · Department of Information and Communication Engineering</div>
+  <div class="O2 card box" data-in="e23+1.4" data-k="up" data-r="-0.6" data-sfx="paper" style="left:300px;top:290px;width:1320px;height:330px">
+    <div class="pp"></div>
+    <div class="ct" style="padding:34px 54px;font:700 36px/66px var(--zh)">
+      <div class="flow"><span class="flow ik">招生</span>enroll.just.edu.tw</div>
+      <div class="flow"><span class="flow ik">系網</span>cc.just.edu.tw</div>
+      <div class="flow"><span class="flow ik">電話</span>(02) 8212-2000 分機 2841</div>
+      <div class="flow"><span class="flow ik">地址</span>新北市新店區安忠路99號（安坑輕軌 景文科大站）</div>
+    </div>
+  </div>
+  <div class="O2 box" data-in="e23+1.8" data-k="fade" style="left:300px;top:640px;width:1320px;height:70px;font:400 22px/35px var(--zh);color:var(--ink2);text-align:center">資料來源：104人力銀行《2025科技業人才報告書》、景文科大資通系招生資料（114學年學雜費、校友就業實例、iPAS 鑑定成績）、新北大眾捷運公司</div>
+  <div class="O2 card box" id="author" data-in="e23+2.2" data-k="stamp" data-r="-2" data-sfx="stamp" style="left:610px;top:740px;width:700px;height:120px">
+    <div class="pp" style="background:var(--kraft)"></div>
+    <div class="ct center" style="font:900 56px var(--zh)">作者｜李振偉</div>
+  </div>
+</section>
+
+<div id="wipe"><div style="left:0;width:2400px;background:var(--red)"></div><div style="left:140px;width:2120px;background:var(--yellow)"></div><div style="left:300px;width:1800px;background:var(--ink)"></div></div>
+<div id="grain"></div><div id="vig"></div>
+<div id="subs" class="hide"><span class="zh"></span><span class="en"></span></div>
+</div></div>
+
+<button id="bigplay" aria-label="播放">▶</button>
+<div id="ui">
+  <button id="play">▶ 播放</button>
+  <input id="seek" type="range" min="0" max="180" step="0.01" value="0">
+  <span id="time">0:00 / 3:00</span>
+  <select id="lang"><option value="zh">中文配音</option><option value="en">English voice</option></select>
+  <button id="subbtn" class="on">字幕 CC</button>
+  <div id="chap"></div>
+</div>
+<audio id="aud" preload="auto"></audio>
+<div id="preload"></div>
+
+<script>
+(function(){
+const RENDER = /[?&]render/.test(location.search);
+if (RENDER) document.body.classList.add('render');
+const TLD = window.TL, C = TLD.cues, SC = TLD.scenes;
+const sceneById = {}; SC.forEach(s => sceneById[s.id] = s);
+
+/* ---------- 工具 ---------- */
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const rnd=n=>{const x=Math.sin(n*127.1+311.7)*43758.5453;return x-Math.floor(x)};
+const outCubic=u=>1-Math.pow(1-u,3), inCubic=u=>u*u*u, inOut=u=>u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
+const outBack=(u,k=1.70158)=>{const c3=k+1;return 1+c3*Math.pow(u-1,3)+k*Math.pow(u-1,2)};
+function T(expr, sc){
+  return Function('return ('+String(expr)
+    .replace(/c(\d+)/g,(m,i)=>C[+i].start).replace(/e(\d+)/g,(m,i)=>C[+i].end)
+    .replace(/S/g,sc.start).replace(/E/g,sc.end)+')')();
+}
+function enterP(k,u){
+  switch(k){
+    case 'drop':{const e=outBack(u,2.4);return{y:(1-e)*-80,s:1+(1-e)*.22,r:(1-e)*5,o:Math.min(1,u*4)}}
+    case 'left':{const e=outBack(u,1.3);return{x:(1-e)*-1500,r:(1-e)*-10}}
+    case 'right':{const e=outBack(u,1.3);return{x:(1-e)*1500,r:(1-e)*10}}
+    case 'up':{const e=outBack(u,1.3);return{y:(1-e)*900,r:(1-e)*6}}
+    case 'throw':{const e=outBack(u,1.6);return{x:(1-e)*700,y:(1-e)*520,r:(1-e)*38}}
+    case 'pop':{return{s:Math.max(0,outBack(u,2.8)),o:u>0?1:0}}
+    case 'stamp':{const a=clamp(u/.55,0,1);const s=2.3-1.3*outCubic(a)-(u>.55?Math.sin((u-.55)/.45*Math.PI)*.06:0);return{s,o:Math.min(1,u*3)}}
+    case 'wipe':{return{sx:outCubic(u)}}
+    default:return{o:u}
+  }
+}
+function exitP(k,u){
+  switch(k){
+    case 'left':return{x:-1700*inCubic(u),r:-14*u,o:u<1?1:0};
+    case 'up':return{y:-1100*inCubic(u),r:-6*u,o:u<1?1:0};
+    case 'fall':return{y:900*u*u,r:40*u};
+    default:return{o:1-u};
+  }
+}
+function boil(seed,t,a){const k=Math.floor(t*7.5);return{x:(rnd(seed*97+k)-.5)*2*a,y:(rnd(seed*31+k*7.3)-.5)*2*a,r:(rnd(seed*13+k*3.1)-.5)*.5*a}}
+function setT(el,p){
+  const sx=p.sx??p.s??1, sy=p.sy??p.s??1;
+  el.style.transform=`translate(${(p.x||0).toFixed(2)}px,${(p.y||0).toFixed(2)}px) rotate(${(p.r||0).toFixed(3)}deg) scale(${sx.toFixed(4)},${sy.toFixed(4)})`+(p.extra||'');
+  el.style.opacity=(p.o??1);
+  el.style.visibility=(p.o??1)<=0.001?'hidden':'visible';
+}
+
+/* ---------- 生成重複結構 ---------- */
+document.querySelectorAll('.dipbody').forEach(d=>{
+  d.style.cssText+=';width:800px;height:500px';
+  d.innerHTML=`<div style="inset:0;background:#FBF4E2;box-shadow:0 18px 14px rgba(0,0,0,.35)"></div>
+  <div style="left:22px;top:22px;right:22px;bottom:22px;border:8px double #B08D57"></div>
+  <div style="left:0;top:66px;width:800px;text-align:center;font:900 92px/1 var(--serif);letter-spacing:18px;color:#3a2a14">畢業證書</div>
+  <div style="left:0;top:182px;width:800px;text-align:center;font:400 40px/1 var(--type);letter-spacing:14px;color:#8a6a3a">DIPLOMA</div>
+  ${[262,302,342].map((y,i)=>`<div style="left:${150+i*10}px;top:${y}px;width:${500-i*40}px;height:10px;background:#d8c9a8;border-radius:5px"></div>`).join('')}
+  <div style="left:96px;top:356px;width:104px;height:104px;border-radius:50%;background:#E1B44C;border:6px solid #b08d57"></div>
+  <div style="left:600px;top:362px;width:96px;height:96px;border:6px solid #c33;color:#c33;font:900 34px/40px var(--serif);text-align:center;padding-top:6px;transform:rotate(-8deg)">文憑<br>專用</div>`;
+});
+// 撕裂線（鋸齒互補）
+(function(){
+  const ys=[0],xs=[388];let y=0,i=0;while(y<500){y=Math.min(500,y+24+rnd(i)*30);ys.push(y);xs.push(374+rnd(i+50)*26);i++}
+  const L=['0 0'].concat(ys.map((y,k)=>`${xs[k]}px ${y}px`)).concat(['0 500px']);
+  document.querySelector('.half.L').style.clipPath=`polygon(${L.join(',')})`;
+  const R=ys.map((y,k)=>`${xs[k]-370}px ${y}px`).concat(['430px 500px','430px 0']);
+  document.querySelector('.half.R').style.clipPath=`polygon(${R.join(',')})`;
+})();
+document.querySelectorAll('.cert').forEach(c=>{c.innerHTML=`
+  <div style="left:18px;top:18px;right:18px;bottom:18px;border:4px solid var(--blue)"></div>
+  <div style="left:0;top:42px;width:380px;text-align:center;font:700 26px/1 var(--zh);color:var(--ink2)">經濟部產業人才能力鑑定</div>
+  <div style="left:0;top:84px;width:380px;text-align:center;font:400 96px/1 var(--disp);color:var(--blue)">iPAS</div>
+  <div style="left:0;top:196px;width:380px;text-align:center;font:900 40px/1 var(--zh)">天線設計工程師</div>
+  <div style="left:40px;top:258px;width:300px;height:5px;background:var(--ink)"></div>
+  <div style="left:0;top:286px;width:380px;text-align:center;font:900 44px/1 var(--zh);color:var(--red)">→ 碩士畢業</div>
+  <div style="left:0;top:350px;width:380px;text-align:center;font:400 24px/1 var(--type)">RF · EMC · M.S.</div>`});
+document.querySelectorAll('.offer').forEach(o=>{
+  o.innerHTML=`<div class="pp"></div><div class="ct">
+   <div style="left:0;top:0;width:22px;height:100%;background:var(--red)"></div>
+   <div style="left:48px;top:20px;font:400 24px/1 var(--type);letter-spacing:3px;color:var(--red)">OFFER LETTER${o.dataset.who?' · '+o.dataset.who:''}</div>
+   <div style="left:48px;top:${o.dataset.who?56:52}px;font:900 54px/1.2 var(--zh);white-space:nowrap">${o.dataset.co}</div>
+   <div class="stamp" style="left:${760-262}px;top:${parseInt(o.style.height)/2-44}px;width:236px;height:84px;font-size:32px;white-space:nowrap;border-width:6px;border-radius:12px;transform:rotate(-6deg)">${o.dataset.pay}</div></div>`;
+});
+document.querySelectorAll('.step').forEach(s=>{
+  s.style.width='460px';s.style.height='190px';
+  s.innerHTML=`<div class="pp" style="background:${s.dataset.c}"></div><div class="ct" style="color:#fff">
+   <div style="left:24px;top:34px;width:120px;height:120px;border-radius:50%;background:#fff;color:${s.dataset.c};font:400 84px/120px var(--disp);text-align:center">${s.dataset.n}</div>
+   <div style="left:166px;top:40px;font:900 40px/1.2 var(--zh);white-space:nowrap">${s.dataset.t}</div>
+   <div style="left:166px;top:108px;width:282px;font:700 22px/1.4 var(--zh);white-space:nowrap">${s.dataset.s}</div></div>`;
+});
+document.querySelectorAll('.pill').forEach(p=>{p.style.cssText+=';height:66px;padding:0 30px;background:var(--cream);border:5px solid var(--ink);border-radius:40px;font:900 38px/56px var(--zh);box-shadow:6px 8px 0 rgba(0,0,0,.25);white-space:nowrap'});
+document.querySelectorAll('.lbl').forEach(p=>{p.style.cssText+=';font:900 44px/1.15 var(--zh);padding-top:6px'; p.querySelector('small').style.cssText='font:700 24px var(--zh);color:var(--ink2)'});
+document.querySelectorAll('.ik').forEach(p=>{p.style.cssText='display:inline-block;width:96px;margin-right:22px;background:var(--red);color:#fff;border-radius:8px;text-align:center;font:900 30px/50px var(--zh);vertical-align:4px'});
+// 16 人格子
+(function(){
+  const g=document.getElementById('grid16');let h='';
+  for(let i=0;i<16;i++){const x=(i%8)*112+6,y=Math.floor(i/8)*130+6;
+    h+=`<div class="p16" data-i="${i}" style="left:${x}px;top:${y}px;width:100px;height:122px"><svg style="left:10px;top:0;color:#bdb7ad" width="80" height="110" viewBox="0 0 80 110"><use href="#person"/></svg>${i<3?'<svg class="crown" style="left:20px;top:-26px" width="60" height="40"><use href="#crown"/></svg>':''}</div>`}
+  g.innerHTML=h;
+})();
+// 星爆
+(function(){const cx=380,cy=144,n=22;let d='';for(let i=0;i<n*2;i++){const a=i/(n*2)*Math.PI*2,r=i%2?(300+rnd(i)*40):(225+rnd(i+9)*25),ry=r*.38;d+=(i?'L':'M')+(cx+Math.cos(a)*r).toFixed(1)+' '+(cy+Math.sin(a)*ry*1.0).toFixed(1)}document.getElementById('burst').setAttribute('d',d+'Z')})();
+// 輕軌站
+const STN=[['雙城',180,560],['玫瑰中國城',330,505],['台北小城',480,470],['耕莘安康院區',630,445],['景文科大',790,415],['安康',950,380],['陽光運動公園',1130,320],['新和國小',1310,255],['十四張',1500,190]];
+(function(){let h='';STN.forEach(([n,x,y],i)=>{const big=i===4;
+  h+=`<g class="stn" data-i="${i}"><circle cx="${x}" cy="${y}" r="${big?20:13}" fill="${big?'#E3392B':'#fff'}" stroke="#1c1b1a" stroke-width="5"/>`+
+  `<text x="${x}" y="${y+(big?62:50)}" ${big?'font-size="34" font-weight="900" fill="#E3392B"':''}>${n}</text>`+
+  (i===8?`<text x="${x}" y="${y+84}" font-size="22" font-weight="400" fill="#4a4640">（轉乘捷運環狀線）</text>`:'')+`</g>`});
+  document.getElementById('stations').innerHTML=h})();
+const tapeP=document.getElementById('tapepath'), tapeLen=tapeP.getTotalLength();
+tapeP.style.strokeDasharray=tapeLen;
+// 打字收據
+const RECEIPT=['每學期最多省　　6,056 元','× 8 學期（四年）','＝ 48,448 元'];
+
+/* ---------- 動畫元素註冊 ---------- */
+const ITEMS=[]; let seed=1;
+document.querySelectorAll('.scene').forEach(secEl=>{
+  const sc=sceneById[secEl.dataset.id]; sc.el=secEl;
+  secEl.querySelectorAll('[data-in]').forEach(el=>{
+    const it={el,sc,tin:T(el.dataset.in,sc),k:el.dataset.k||'drop',d:+(el.dataset.d||(el.dataset.k==='stamp'?0.5:0.42)),
+      tout:el.dataset.out?T(el.dataset.out,sc):null,ok:el.dataset.ok||'fade',r:+(el.dataset.r||0),
+      b:el.dataset.b!==undefined?+el.dataset.b:1.3,seed:seed++};
+    if(el.classList.contains('hl')||el.classList.contains('tline')||it.k==='wipe') el.style.transformOrigin='0 50%';
+    ITEMS.push(it);
+  });
+});
+
+/* ---------- 音效清單（與畫面同源） ---------- */
+const SFX=[];
+ITEMS.forEach(it=>{if(it.el.dataset.sfx)SFX.push({t:+it.tin.toFixed(3),type:it.el.dataset.sfx})});
+const S_=id=>sceneById[id];
+// 自訂事件
+SFX.push({t:C[1].start-0.25,type:'tear'});
+[0,0.38,0.76].forEach(d=>SFX.push({t:C[9].start+0.1+d,type:'snip'}));
+SFX.push({t:C[9].start+1.2,type:'flip'},{t:C[9].start+1.5,type:'flip'});
+SFX.push({t:C[11].start,type:'type',n:19,dur:2.0});
+SFX.push({t:C[3].start+6.9,type:'tick',n:8,dur:0.55});
+for(let i=0;i<16;i++) SFX.push({t:C[14].start+3.9+i*0.06,type:'tick1'});
+SFX.push({t:C[14].start+5.4,type:'riser'});
+SFX.push({t:C[19].start+0.2,type:'tape'},{t:C[19].start+3.0,type:'whoosh'});
+SFX.push({t:C[20].start+5.0,type:'snip'},{t:C[20].start+5.35,type:'snip'},{t:C[20].start+5.7,type:'whoosh'});
+SFX.push({t:C[21].start+0.35,type:'type',n:30,dur:2.2},{t:C[21].start+2.55,type:'ding'});
+SC.slice(1).forEach(s=>SFX.push({t:s.start-0.3,type:'swish'}));
+SFX.sort((a,b)=>a.t-b.t);
+window.SFX=SFX;
+
+/* ---------- 單幀渲染 ---------- */
+const wipe=document.getElementById('wipe'), subs=document.getElementById('subs'), grain=document.getElementById('grain');
+const subZh=subs.querySelector('.zh'), subEn=subs.querySelector('.en');
+let subsOn=true;
+function renderAt(t){
+  // 定格動畫：時間量化至 15fps
+  t=Math.floor(t*15+1e-6)/15;
+  let cur=SC[SC.length-1];
+  for(const s of SC){ if(t>=s.start && t<s.end){cur=s;break} }
+  SC.forEach(s=>s.el.classList.toggle('on',s===cur));
+  for(const it of ITEMS){
+    if(it.sc!==cur) continue;
+    let p;
+    if(t<it.tin){ p={o:0}; }
+    else{
+      const u=clamp((t-it.tin)/it.d,0,1); p=enterP(it.k,u); p.o=p.o??1;
+      if(it.tout!==null && t>=it.tout){const q=exitP(it.ok,clamp((t-it.tout)/0.4,0,1)); p.x=(p.x||0)+(q.x||0);p.y=(p.y||0)+(q.y||0);p.r=(p.r||0)+(q.r||0);if(q.o!==undefined)p.o=Math.min(p.o,q.o)}
+      if(it.b>0 && u>=1){const w=boil(it.seed,t,it.b);p.x=(p.x||0)+w.x;p.y=(p.y||0)+w.y;p.r=(p.r||0)+w.r}
+      p.r=(p.r||0)+it.r;
+    }
+    setT(it.el,p);
+  }
+  CUSTOM[cur.id] && CUSTOM[cur.id](t,cur);
+  // 轉場
+  let w=null; for(const s of SC.slice(1)){ if(Math.abs(t-s.start)<0.42){w=s;break} }
+  if(w){const u=(t-(w.start-0.42))/0.84; wipe.style.display='block'; wipe.style.left=(1920-u*(1920+2400+300))+'px'} else wipe.style.display='none';
+  grain.style.transform=`translate(${(rnd(Math.floor(t*15))*40-20).toFixed(1)}px,${(rnd(Math.floor(t*15)+3)*40-20).toFixed(1)}px)`;
+  // 字幕
+  let sb=null; for(const s of TLD.subs){ if(t>=s.s-0.05 && t<s.e+0.25){sb=s;break} }
+  if(sb && subsOn){ subs.classList.remove('hide'); if(subZh.textContent!==sb.zh){subZh.textContent=sb.zh;subEn.textContent=sb.en} }
+  else subs.classList.add('hide');
+  window.__t=t;
+}
+const mkP=(id,t,t0,d=0.45)=>{const el=document.getElementById(id); if(el) el.style.backgroundSize=(outCubic(clamp((t-t0)/d,0,1))*100)+'% 100%'};
+const CUSTOM={
+  hook(t,sc){
+    mkP('h-mk',t,C[0].start+1.3);
+    const t0=C[1].start-0.25, u=outCubic(clamp((t-t0)/0.5,0,1));
+    const L=document.querySelector('.half.L'), R=document.querySelector('.half.R');
+    L.style.transform=`translate(${-300*u}px,${8*u}px) rotate(${-7*u}deg)`; R.style.transform=`translate(${300*u}px,${-6*u}px) rotate(${7*u}deg)`;
+  },
+  data(t){
+    mkP('d-mk',t,sceneById.data.start+1.0);
+    const t0=C[3].start+6.9, u=clamp((t-t0)/0.55,0,1);
+    document.getElementById('bignum').textContent=(0.36*u).toFixed(2);
+    if(t<t0) document.getElementById('bignum').style.opacity=0;
+  },
+  answer(t){ mkP('a-mk',t,C[6].start+0.8) },
+  heroes(t){
+    mkP('r-mk',t,sceneById.heroes.start+1.2);
+    const ts=C[9].start, sc=document.getElementById('scissor'), cl=document.getElementById('cutline');
+    const u=clamp((t-ts)/1.15,0,1);
+    sc.style.opacity=(t>=ts-0.1 && t<ts+1.4)?1:0;
+    sc.style.transform=`translate(${60+u*900}px,0)`;
+    const open=14*Math.abs(Math.sin(u*Math.PI*3));
+    document.getElementById('bladeA').setAttribute('transform',`rotate(${-open} 100 60)`);
+    document.getElementById('bladeB').setAttribute('transform',`rotate(${open} 100 60)`);
+    cl.style.opacity=(t>=ts && t<ts+1.6)?1:0; cl.style.width=(u*880)+'px';
+    [['fa',ts+1.2],['fb',ts+1.5]].forEach(([id,tf])=>{
+      const f=document.getElementById(id), a=180*inOut(clamp((t-tf)/0.45,0,1));
+      f.querySelector('.front').style.transform=`perspective(1200px) rotateY(${a}deg)`;
+      f.querySelector('.back').style.transform=`perspective(1200px) rotateY(${a-180}deg)`;
+      f.querySelector('.front').style.visibility=a<90?'visible':'hidden'; f.querySelector('.back').style.visibility=a>=90?'visible':'hidden';
+    });
+    const ty=document.getElementById('typer'), full=ty.dataset.text, n=Math.floor(clamp((t-C[11].start)/2.0,0,1)*full.length);
+    ty.textContent=full.slice(0,n)+(n<full.length && Math.floor(t*4)%2?'▌':'');
+  },
+  lab(t){
+    const t1=C[14].start+3.9, t2=C[14].start+5.4;
+    document.querySelectorAll('.p16').forEach(p=>{const i=+p.dataset.i;
+      const u=clamp((t-(t1+i*0.06))/0.3,0,1); p.style.transform=`scale(${outBack(u,2.6)})`; p.style.opacity=u>0?1:0;
+      const red=i<12 && t>=t2+i*0.07; p.querySelector('svg').style.color=red?'#E3392B':'#bdb7ad';
+      const cr=p.querySelector('.crown'); if(cr){const v=clamp((t-(C[14].start+7.4+i*0.12))/0.3,0,1);cr.style.opacity=v;cr.style.transform=`translateY(${(1-outBack(v,2))*-30}px)`}
+    });
+  },
+  fourplus(t){ mkP('f-mk',t,C[15].start+0.5) },
+  commute(t){
+    mkP('m-mk',t,sceneById.commute.start+1.2);
+    const u=inOut(clamp((t-(C[19].start+0.2))/1.7,0,1));
+    tapeP.style.strokeDashoffset=tapeLen*(1-u);
+    // 列車：十四張 → 景文科大
+    const L5=tapeLen*(4/8)*1.0; const pathL=tapeP; // 沿膠帶路徑
+    const v=inOut(clamp((t-(C[19].start+2.9))/1.6,0,1));
+    const seg=tapeLen*0.5; // K9→K5 約一半（各站間距等比近似）
+    let len=0, acc=[0]; for(let i=8;i>0;i--){const a=STN[i],b=STN[i-1];len+=Math.hypot(a[1]-b[1],a[2]-b[2]);acc.push(len)}
+    const pt=tapeP.getPointAtLength(acc[4]*v), pt2=tapeP.getPointAtLength(Math.min(acc[4]*v+2,tapeLen));
+    const ang=Math.atan2(pt2.y-pt.y,pt2.x-pt.x)*180/Math.PI;
+    const tr=document.getElementById('train'); tr.setAttribute('transform',`translate(${pt.x},${pt.y-30}) rotate(${ang+180}) scale(-1,1)`);
+    tr.style.opacity=t>=C[19].start+2.8?1:0;
+    document.querySelectorAll('.stn').forEach(s=>{const i=+s.dataset.i;const k=clamp((t-(sceneById.commute.start+0.8+(8-i)*0.08))/0.25,0,1);s.style.opacity=k});
+    document.getElementById('leader').style.opacity=t>=C[19].start+4.0?1:0;
+  },
+  tuition(t){
+    mkP('t-mk',t,sceneById.tuition.start+1.1);
+    const tc=C[20].start+5.0, bs=document.getElementById('bigsc');
+    const dn=outCubic(clamp((t-(tc-0.5))/0.4,0,1)), upv=inCubic(clamp((t-(tc+0.9))/0.4,0,1));
+    bs.style.opacity=(t>tc-0.5 && t<tc+1.3)?1:0;
+    bs.style.transform=`translate(0px,${-300+dn*300-upv*400}px)`;
+    const op=t<tc?16:(t<tc+0.35?16*(1-(t-tc)/0.35):(t<tc+0.7?16*(1-(t-tc-0.35)/0.35):0));
+    document.getElementById('bsA').setAttribute('transform',`rotate(${-op} 70 120)`);document.getElementById('bsB').setAttribute('transform',`rotate(${op} 70 120)`);
+    const pc=document.getElementById('piece'), f=clamp((t-(tc+0.7))/0.9,0,1);
+    pc.style.transform=`translate(${f*60}px,${f*f*700}px) rotate(${f*55}deg)`; pc.style.opacity=f<1?1:0;
+    document.getElementById('cutB').style.opacity=(t>=C[20].start+0.6 && t<tc+0.7)?1:0;
+    const r=document.getElementById('receipt'), t0=C[21].start+0.35, tot=RECEIPT.join('').length;
+    let n=Math.floor(clamp((t-t0)/2.2,0,1)*tot), h='';
+    RECEIPT.forEach((line,i)=>{const s=line.slice(0,Math.max(0,n));n-=line.length;h+=`<div class="flow" style="${i===2?'font-size:56px;color:#E3392B;font-weight:700':''}">${s||'&nbsp;'}</div>`});
+    r.innerHTML=h;
+  },
+  montage(t){ mkP('g-mk',t,C[22].start+3.8) },
+  outro(t){}
+};
+
+/* ---------- 版面自檢（給渲染腳本呼叫） ---------- */
+window.checkLayout=function(t){
+  renderAt(t);
+  const cur=SC.find(s=>s.el.classList.contains('on'));
+  const vis=el=>{for(let e=el;e&&e!==document.body;e=e.parentElement){const cs=getComputedStyle(e);if(cs.display==='none'||cs.visibility==='hidden'||+cs.opacity<0.05)return false}return true};
+  const boxes=[...cur.el.querySelectorAll('.box')].filter(vis).map(el=>({el,r:el.getBoundingClientRect(),deco:el.classList.contains('deco'),g:el.dataset.group||null,name:(el.id||el.className)+':'+(el.textContent||'').trim().slice(0,14)}));
+  const bad=[]; const tol=3;
+  const tl=cur.el.querySelector('.tline'); const tlR=tl&&vis(tl)?tl.getBoundingClientRect():null;
+  const sr=subs.classList.contains('hide')?null:subs.getBoundingClientRect();
+  for(const b of boxes){
+    const r=b.r;
+    if(r.left<-tol||r.top<-tol||r.right>1920+tol||r.bottom>1080+tol) bad.push('出界 '+b.name);
+    const cont=b.el.parentElement.closest('.container');
+    if(cont){const c=cont.getBoundingClientRect(); if(r.left<c.left-tol||r.right>c.right+tol||r.top<c.top-tol||r.bottom>c.bottom+tol) bad.push('超出容器 '+b.name)}
+    if(tlR && !b.el.classList.contains('title') && !b.el.classList.contains('tag') && r.top<tlR.bottom-tol && r.bottom>tlR.top && r.left<tlR.right && r.right>tlR.left) bad.push('碰標題線 '+b.name);
+    if(sr && r.bottom>sr.top+tol && r.right>sr.left && r.left<sr.right && !b.deco) bad.push('字幕遮擋 '+b.name);
+    b.el.querySelectorAll('.fit').forEach(f=>{if(f.scrollWidth>f.clientWidth+2) bad.push('文字溢出 '+b.name)});
+    if(b.el.scrollWidth>b.el.clientWidth+4 && getComputedStyle(b.el).overflow!=='visible') bad.push('內容溢出 '+b.name);
+  }
+  for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){
+    const a=boxes[i],b=boxes[j]; if(a.deco||b.deco) continue; if(a.g&&a.g===b.g) continue;
+    if(a.el.contains(b.el)||b.el.contains(a.el)) continue; const inside=(o,i)=>o.el.classList.contains('container')&&i.r.left>=o.r.left-tol&&i.r.right<=o.r.right+tol&&i.r.top>=o.r.top-tol&&i.r.bottom<=o.r.bottom+tol; if(inside(a,b)||inside(b,a)) continue;
+    const ox=Math.min(a.r.right,b.r.right)-Math.max(a.r.left,b.r.left), oy=Math.min(a.r.bottom,b.r.bottom)-Math.max(a.r.top,b.r.top);
+    if(ox>tol&&oy>tol) bad.push(`重疊 ${a.name} × ${b.name} (${ox|0}×${oy|0})`);
+  }
+  // 文字寬度 vs 盒子（無換行文字）
+  for(const b of boxes){ if(b.el.children.length===0 && b.el.textContent.trim() && b.el.scrollWidth>b.el.offsetWidth+4 && b.el.offsetWidth>0 && getComputedStyle(b.el).whiteSpace==='nowrap'&&b.el.style.width) bad.push('文字超出盒寬 '+b.name)}
+  return {scene:cur.id,t,bad};
+};
+window.fontCheck=function(){
+  const fams=[['900 40px "Noto Sans TC"','景'],['700 40px "Noto Serif TC"','證'],['700 40px "LXGW WenKai TC"','設'],['40px "Archivo Black"','0'],['40px "Special Elite"','A']];
+  return fams.map(([f,c])=>[f,document.fonts.check(f,c)]);
+};
+
+/* ---------- 預載字型字集 ---------- */
+document.getElementById('preload').innerHTML=['zh','serif','hand','disp','type'].map(v=>`<div style="font-family:var(--${v});font-weight:${v==='serif'||v==='hand'?700:900}">${TLD.subs.map(s=>s.zh+s.en).join('')}非工科照樣贏！年薪80萬～120萬每學期最多省6,056元×8學期（四年）＝48,448元0123456789</div>`).join('')+
+  `<div style="font:400 28px var(--zh)">${TLD.subs.map(s=>s.en).join(' ')}</div><div style="font:700 42px var(--zh)">${TLD.subs.map(s=>s.zh).join('')}</div>`;
+window.renderAt=renderAt;
+window.ready=document.fonts.ready.then(()=>Promise.all([...document.images].map(i=>i.complete?1:new Promise(r=>{i.onload=i.onerror=r})))).then(()=>{renderAt(0);return true});
+
+/* ---------- 互動播放器 ---------- */
+if(!RENDER){
+  const wrap=document.getElementById('wrap'), ui=document.getElementById('ui'), aud=document.getElementById('aud'), seek=document.getElementById('seek');
+  const bp=document.getElementById('bigplay'), pl=document.getElementById('play'), tm=document.getElementById('time'), lang=document.getElementById('lang');
+  seek.max=TLD.duration;
+  const fmt=s=>`${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+  function fit(){const H=innerHeight-ui.offsetHeight, k=Math.min(innerWidth/1920,H/1080); wrap.style.transform=`translate(${(innerWidth-1920*k)/2}px,${(H-1080*k)/2}px) scale(${k})`;
+    bp.style.left=(innerWidth/2-48)+'px'; bp.style.top=(H/2-48)+'px'}
+  addEventListener('resize',fit);
+  const names={hook:'痛點',data:'數據',answer:'解答',heroes:'跨界',lab:'設備',fourplus:'4+1',commute:'交通',tuition:'學費',montage:'實作',outro:'結尾'};
+  const chap=document.getElementById('chap');
+  SC.forEach(s=>{const b=document.createElement('button');b.textContent=names[s.id];b.onclick=()=>{go(s.start+0.45)};chap.appendChild(b)});
+  let playing=false, clock=0, last=0, useAudio=true;
+  function setSrc(){aud.src=`audio/mix_${lang.value}.m4a`; useAudio=true; aud.addEventListener('loadedmetadata',()=>{try{aud.currentTime=clock}catch(e){} if(playing) aud.play().catch(()=>{useAudio=false})},{once:true})}
+  aud.onerror=()=>{useAudio=false};
+  function now(){return clock}
+  function go(t){clock=t; try{aud.currentTime=t}catch(e){} renderAt(t); seek.value=t; tm.textContent=`${fmt(t)} / ${fmt(TLD.duration)}`}
+  function toggle(){playing=!playing; pl.textContent=playing?'❚❚ 暫停':'▶ 播放'; bp.style.display=playing?'none':'block';
+    if(playing){ if(clock>=TLD.duration-0.05) go(0); last=performance.now(); if(useAudio){ try{aud.currentTime=clock}catch(e){} aud.play().catch(()=>{useAudio=false}) } } else aud.pause()}
+  pl.onclick=toggle; bp.onclick=toggle;
+  document.getElementById('stage').onclick=toggle;
+  lang.onchange=setSrc;
+  const sbt=document.getElementById('subbtn'); sbt.onclick=()=>{subsOn=!subsOn;sbt.classList.toggle('on',subsOn);renderAt(now())};
+  seek.oninput=()=>go(+seek.value);
+  addEventListener('keydown',e=>{if(e.code==='Space'){e.preventDefault();toggle()} if(e.code==='ArrowRight')go(Math.min(TLD.duration,now()+5)); if(e.code==='ArrowLeft')go(Math.max(0,now()-5))});
+  function loop(ts){
+    if(playing){ const dt=(ts-last)/1000; clock+=dt;
+      if(useAudio && !aud.paused && aud.readyState>=2){ const d=aud.currentTime-clock; if(Math.abs(d)<0.6) clock+=d*0.2; else { try{aud.currentTime=clock}catch(e){} } }
+      const t=now(); if(t>=TLD.duration){toggle();go(TLD.duration-0.01)} renderAt(t); seek.value=t; tm.textContent=`${fmt(t)} / ${fmt(TLD.duration)}`}
+    last=ts; requestAnimationFrame(loop)}
+  aud.src='audio/mix_zh.m4a';
+  window.ready.then(()=>{fit();renderAt(0.01);requestAnimationFrame(loop)}); fit();
+}
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+/build/
+/assets/
+/.claude/
+__pycache__/
+*.mp4
+*.wav
